@@ -1,8 +1,30 @@
 import logger from "../utils/logger.js";
+import { Usuario } from "../models/Usuario.model.js";
+import { validateUserData, userIfExist } from "../services/validateUserData.js";
+import { hashPassword } from "../services/auth.services.js";
+import { sendEmail } from "../services/email.services.js";
 
 
 export const createUser = async (req, res, next) => {
     try {
+        const { nombre, apellido, email, password, telefono} = req.body
+
+        await userIfExist(email)
+        validateUserData(nombre, apellido, email, password, telefono)
+
+        const hash = hashPassword(password)
+
+        await Usuario.create({
+            nombre, 
+            apellido,
+            email,
+            password: hash,
+            telefono
+        })
+
+        const username = `${nombre} ${apellido}`
+
+        sendEmail( email, "registro", username )
 
         res.status(201).json({
             code: 201,
