@@ -94,7 +94,7 @@ export const crearTemplateHtml = (email, asunto, token, username) => {
                   <p>¡Hola! <strong>${username}</strong></p>
                   <p>Hemos recibido una solicitud para recuperar tu contraseña en Refugio de Animales React. Haz clic en el botón para restablecerla:</p>
                   <div class="boton">
-                    <a href="http://localhost:5173/modificar-password/?email=${email}&token=${token}" class="button">Cambiar Contraseña</a>
+                    <a href="http://localhost:5173/change-password/?email=${email}&token=${token}" class="button">Cambiar Contraseña</a>
                   </div>
                   <p>Si no hiciste esta solicitud, ignora este correo.</p>
                 </div>
