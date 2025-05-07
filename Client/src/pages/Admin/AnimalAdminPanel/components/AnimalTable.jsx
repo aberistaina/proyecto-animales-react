@@ -5,6 +5,8 @@ import { ModalCrear } from "./ModalCrear"
 
 export const AnimalTable = ({ animales, setIsOpen, isOpen, razas, especies }) => {
     const [animalList, setAnimalList] = useState([]);
+    const [ animalSeleccionado, setAnimalSeleccionado ] = useState("")
+    const [ modo, setModo ] = useState("")
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
@@ -64,12 +66,23 @@ export const AnimalTable = ({ animales, setIsOpen, isOpen, razas, especies }) =>
         }
     }
 
+    const handleUpdate = async(id)=>{
+        try {
+            setIsOpen(true)
+            setModo("modificar")
+            setAnimalSeleccionado(id)
+            console.log(id);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <div>
-            {isOpen && <ModalCrear setIsOpen={setIsOpen} razas={razas} especies={especies}/>}
+            {isOpen && <ModalCrear setIsOpen={setIsOpen} razas={razas} especies={especies} modo={modo} animalSeleccionado={animalSeleccionado}/>}
             <div className="flex justify-start mt-5 ms-[10%]">
-                <CreateButton setIsOpen={setIsOpen} />
+                <CreateButton setIsOpen={setIsOpen} setModo={setModo} />
             </div>
             <div className="flex justify-center mt-5">
                 <table className="w-[80%] divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
@@ -125,7 +138,7 @@ export const AnimalTable = ({ animales, setIsOpen, isOpen, razas, especies }) =>
                                 <td className="px-6 py-4 text-sm text-gray-800">
                                     <div className="flex justify-center items-center min-h-full">
                                         <button className="px-4 py-2 bg-green-400 text-white rounded-md hover:bg-green-600 transition duration-200"
-                                        onClick={() => setIsOpen(true)}
+                                        onClick={(e) => handleUpdate(animal.id)}
                                         >
                                             Modificar
                                         </button>

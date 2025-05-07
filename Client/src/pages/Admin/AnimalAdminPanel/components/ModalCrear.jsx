@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 
-export const ModalCrear = ({ setIsOpen, razas, especies }) => {
+export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionado }) => {
 
     const [form, setForm] = useState({
         nombre: "",
@@ -10,6 +10,7 @@ export const ModalCrear = ({ setIsOpen, razas, especies }) => {
         especie: "",
         raza: "",
     });
+
     const { enqueueSnackbar } = useSnackbar();
 
     const handleChange = (e) => {
@@ -27,17 +28,23 @@ export const ModalCrear = ({ setIsOpen, razas, especies }) => {
             formData.append("raza", form.raza)
 
             const requestOptions = {
-                method: "POST",
+                method: modo === "crear" ? "POST" : "PUT",
                 body: formData
             }
-            const url = "http://localhost:3000/api/v1/animales/crear-animal"
-            const response = await fetch(url, requestOptions)
+            const url = "http://localhost:3000/api/v1/animales"
+            const path = modo === "crear" ? "/crear-animal" : `/editar-animal/${animalSeleccionado}`
+
+            
+            const response = await fetch(`${url}${path}`, requestOptions)
             const data = await response.json()
 
             if (data.code === 201) {
                 enqueueSnackbar(data.message, { variant: "success" });
                 setIsOpen(false)
-            } else {
+            } else if(data.code === 200) {
+                enqueueSnackbar(data.message, { variant: "success" });
+                setIsOpen(false)
+            }else{
                 enqueueSnackbar(data.message, { variant: "error" });
             }
         } catch (error) {
@@ -45,11 +52,41 @@ export const ModalCrear = ({ setIsOpen, razas, especies }) => {
         }
     }
 
+    useEffect(() => {
+        const getAnimalData = async() =>{
+            try {
+                const url = `http://localhost:3000/api/v1/animales/get-animal/${animalSeleccionado}`
+                const response = await fetch(url)
+                const data = await response.json()
+                const animal = data.data
+                console.log(animal);
+
+                setForm({
+                    nombre: animal.nombre,
+                    edad: animal.edad,
+                    descripcion: animal.descripcion,
+                    especie: animal.id_especie,
+                    raza: animal.id_raza
+                })
+                
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        if(modo === "modificar"){
+            getAnimalData()
+        }else{
+            return
+        }
+    }, [modo])
+    
+
 
     return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
                 <div className="bg-white p-6 rounded-lg w-full max-w-sm shadow-lg">
-                    <h2 className="text-xl font-semibold mb-4">Crear Nuevo Animal</h2>
+                    <h2 className="text-xl font-semibold mb-4">{modo === "crear" ? "Crear Nuevo Animal" : "Modificar Animal"}</h2>
                     <div className="space-y-3" >
                         <input
                             name="nombre"

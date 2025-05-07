@@ -1,7 +1,7 @@
 import { Animal } from "../models/Animal.model.js"
 import { Raza } from "../models/Raza.model.js"
 import { Especie } from "../models/Especie.model.js"
-import { where } from "sequelize"
+
 
 export const getAllAnimals = async(req, res) =>{
     try {
@@ -25,7 +25,8 @@ export const getAllAnimals = async(req, res) =>{
             descripcion: animal.descripcion,
             estado: animal.estado,
             especie:animal.especie?.nombre || "Sin especie",
-            raza: animal.raza?.nombre || "Sin raza"
+            raza: animal.raza?.nombre || "Sin raza",
+            imagen: animal.imagen
         }))
 
         
@@ -33,6 +34,27 @@ export const getAllAnimals = async(req, res) =>{
             code:200,
             message: "animales obtenidos con éxito",
             data: animalesMap
+        })
+    } catch (error) {
+        res.status(500).json({
+            code:500,
+            message: "Hubo un error interno en el servidor",
+            
+        })
+    }
+}
+
+export const getAnimalById = async(req, res) =>{
+    try {
+
+        const { id } = req.params
+        const animal = await Animal.findOne({
+            where:{ id }
+        })
+        res.status(200).json({
+            code:200,
+            message: "Animal encontrado con éxito",
+            data: animal
         })
     } catch (error) {
         res.status(500).json({

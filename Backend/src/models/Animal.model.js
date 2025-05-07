@@ -31,6 +31,10 @@ export const Animal = sequelize.define('Animal', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    imagen: {
+        type: DataTypes.STRING(256),
+        allowNull: true,
+    },
 
     
 }, {
