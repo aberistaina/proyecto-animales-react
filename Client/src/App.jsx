@@ -8,8 +8,17 @@ import { UserAdminPanelPage } from "./pages/Admin/UsersAdminPanel/UserAdminPanel
 import { AnimalAdminPanelPage } from "./pages/Admin/AnimalAdminPanel/AnimalAdminPanelPage";
 import { DetalleAnimal } from "./pages/DetalleAnimal/DetalleAnimal";
 import { Navbar } from "./components/Navbar";
+import { setAuthFromStorage } from "./store/authSlice";
+import { useDispatch } from "react-redux"
+import { useEffect } from "react";
 
 export const App = () => {
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(setAuthFromStorage())
+    }, [])
+
     return (
         <BrowserRouter>
             <Navbar />

@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { UserTable } from './components/UserTable'
 import { UserDetails } from './components/UserDetails'
+import { ModalCrearUsuarios } from './components/ModalCrearUsuarios';
 
 export const UserAdminPanelPage = () => {
         const [users, setUsers] = useState([]);
+        const [isOpenUserModal, setIsOpenUserModal] = useState(false)
+        const [modo, setModo ] = useState("")
+        const [ usuarioSeleccionado, setUsuarioSeleccionado ] = useState("")
     
         const getUsers = async () => {
             try {
@@ -30,11 +34,23 @@ export const UserAdminPanelPage = () => {
             };
             getAllUsers();
         }, []);
-    
-  return (
-    <>
-        <UserDetails  />
-        <UserTable users={users}/>
-    </>
-  )
+
+    const handleUpdate = async(id)=>{
+        try {
+            setIsOpenUserModal(true)
+            setModo("modificar")
+            setUsuarioSeleccionado(id)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    return (
+        <>
+            
+            <UserDetails  />
+            <UserTable setIsOpenUserModal={setIsOpenUserModal} users={users} setModo={setModo} handleUpdate={handleUpdate}/>
+            
+            {isOpenUserModal && <ModalCrearUsuarios modo={modo} usuarioSeleccionado={usuarioSeleccionado} setIsOpenUserModal={setIsOpenUserModal} />}
+        </>
+    )
 }

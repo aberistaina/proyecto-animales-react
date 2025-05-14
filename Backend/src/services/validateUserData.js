@@ -2,7 +2,7 @@ import { ValidationError } from "../errors/TypeError.js";
 import { isValidName, isValidEmail, isValidPassword, isValidPhone } from "../utils/validators.js";
 import { Usuario } from "../models/Usuario.model.js";
 
-export const validateUserData = (nombre, apellido, email, password, telefono) => {
+export const validateUserData = (nombre, apellido, email, password=null, telefono) => {
 
     if (!isValidName(nombre)) {
         throw new ValidationError("El Nombre Proporcionado no cumple con el formato", {
@@ -22,11 +22,16 @@ export const validateUserData = (nombre, apellido, email, password, telefono) =>
         });
     }
 
-    if (!isValidPassword(password)) {
-        throw new ValidationError("La contraseña debe contener 9 caracteres, 4 letras, 4 números, un caracter especial y como mínimo una mayuscula, una minúscula", {
-            field: "Password",
-        });
+    if(!password){
+        return
+    }else{
+        if (!isValidPassword(password)) {
+            throw new ValidationError("La contraseña debe contener 9 caracteres, 4 letras, 4 números, un caracter especial y como mínimo una mayuscula, una minúscula", {
+                field: "Password",
+            });
     }
+    }
+    
 
     if (!isValidPhone(telefono)) {
         throw new ValidationError("El Teléfono Proporcionado no cumple con el formato", {

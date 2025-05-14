@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
+import PacmanLoader from "react-spinners/PulseLoader";
 
 export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionado }) => {
+
+    const [isLoading, setIsLoading ] = useState(false)
 
     const [form, setForm] = useState({
         nombre: "",
@@ -20,6 +23,7 @@ export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionad
 
     const handleSubmit = async (e) => {
         try {
+            setIsLoading(true)
             const formData = new FormData()
             formData.append("nombre", form.nombre)
             formData.append("edad", form.edad)
@@ -34,9 +38,9 @@ export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionad
             const url = "http://localhost:3000/api/v1/animales"
             const path = modo === "crear" ? "/crear-animal" : `/editar-animal/${animalSeleccionado}`
 
-            
             const response = await fetch(`${url}${path}`, requestOptions)
             const data = await response.json()
+            setIsLoading(false)
 
             if (data.code === 201) {
                 enqueueSnackbar(data.message, { variant: "success" });
@@ -147,10 +151,11 @@ export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionad
                             Cancelar
                         </button>
                         <button
-                            className="px-4 py-2 bg-blue-600 text-white rounded"
+                            disabled = {isLoading}
+                            className={`${isLoading ? "w-32 flex justify-center items-center gap-x-2 disabled" : "w-32"} "px-4 py-2 bg-blue-600 text-white rounded`}
                             onClick={handleSubmit}
                         >
-                            Guardar
+                            {isLoading ? <PacmanLoader color="#156b4d" size={10} /> : "Guardar"}
                         </button>
                     </div>
                 </div>

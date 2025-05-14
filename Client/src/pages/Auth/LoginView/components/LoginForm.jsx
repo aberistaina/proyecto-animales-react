@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../../../store/authSlice";
 
 export const LoginForm = () => {
     const { enqueueSnackbar } = useSnackbar();
+    const dispatch = useDispatch()
     const [loginForm, setLoginForm] = useState({
         email: "",
         password: "",
@@ -32,7 +35,7 @@ export const LoginForm = () => {
 
             if (data.code === 200) {
                 enqueueSnackbar(data.message, { variant: "success" });
-                localStorage.setItem("token", data.token);
+                dispatch(login(data.token))
             } else {
                 enqueueSnackbar(data.message, { variant: "error" });
             }

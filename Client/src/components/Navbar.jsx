@@ -39,7 +39,7 @@ export const Navbar = () => {
                         </h4>
 
                         <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
-                            <NavLink to={"/admin/usuarios"} className="flex items-center">
+                            <NavLink to={"/admin/users"} className="flex items-center">
                                 <RiAdminFill className="mr-2" /> Panel Usuarios
                             </NavLink>
                         </h4>

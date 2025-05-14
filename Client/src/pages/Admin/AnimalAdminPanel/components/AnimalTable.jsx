@@ -26,7 +26,7 @@ export const AnimalTable = ({ animales, setIsOpen, isOpen, razas, especies }) =>
 
         const formData = new FormData()
         formData.append("id", animalID);
-        formData.append("estado", nuevoEstado);
+        formData.append("rol", nuevoEstado);
 
         const requestOptions = {
             method: "PUT",

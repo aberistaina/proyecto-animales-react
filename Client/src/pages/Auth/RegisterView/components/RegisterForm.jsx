@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaUserAstronaut } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { MdOutlinePhoneIphone } from "react-icons/md";
 import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom"  
 
-export const RegisterForm = () => {
+export const RegisterForm = ({ setIsOpenUserModal , modo, usuarioSeleccionado}) => {
 
+
+    const navigate = useNavigate()
     const [ showPassword, setShowPassword ] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
     const [ registerForm, setRegisterForm ] = useState({
@@ -44,18 +47,26 @@ export const RegisterForm = () => {
             formData.append("password", registerForm.password)
             formData.append("telefono", registerForm.telefono)
 
-            const url = "http://localhost:3000/api/v1/auth"
+
+            const url = "http://localhost:3000"
+            const path = modo == "modificar" ? "api/v1/admin/update-user" : "api/v1/auth" 
+
             const requestOptions = {
-                method: "POST",
+                method: modo == "modificar" ? "PUT" : "POST",
                 body: formData
             }
 
-            const response = await fetch(url, requestOptions)
+            const response = await fetch(`${url}/${path}`, requestOptions)
             const data = await response.json()
             
             if(data.code === 201){
                 enqueueSnackbar(data.message, { variant: "success"})
-            }else{
+                navigate("/")
+            }else if(data.code === 200){
+                enqueueSnackbar(data.message, { variant: "success"})
+                setIsOpenUserModal(false)
+            }
+            else{
                 enqueueSnackbar(data.message, { variant: "error"})
             }
         } catch (error) {
@@ -64,10 +75,38 @@ export const RegisterForm = () => {
 
     }
 
+    useEffect(() => {
+        const getUserData = async() =>{
+            try {
+                const url = `http://localhost:3000/api/v1/admin/get-user/${usuarioSeleccionado}`
+                const response = await fetch(url)
+                const data = await response.json()
+                const usuario = data.data
+
+                setRegisterForm({
+                    nombre: usuario.nombre,
+                    apellido: usuario.apellido,
+                    email: usuario.email,
+                    password: usuario.password,
+                    telefono: usuario.telefono
+                })
+                
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        if(modo === "modificar"){
+            getUserData()
+        }else{
+            return
+        }
+    }, [modo])
+
 
   return (
     <>
-        <form className="space-y-4 w-1/4 mt-8" onSubmit={handleSubmit}>
+        <form className="space-y-4 mt-8" onSubmit={handleSubmit}>
             <div className="flex justify-center items-center space-x-4">
             <FaUserAstronaut />
                 <input
@@ -113,6 +152,7 @@ export const RegisterForm = () => {
                 El nombre debe contener mínimo 2 caracteres
             </span>
 
+            {modo !== "modificar" &&(
             <div className="flex justify-center items-center space-x-4">
                 {showPassword ? <FaEye onClick={() => setShowPassword(!showPassword)} /> 
                 : 
@@ -125,12 +165,13 @@ export const RegisterForm = () => {
                     onChange={handleChange}
                     className="flex w-full px-4 py-2 border border-gray-400 rounded-lg shadow-sm focus:ring-indigo-300"
                 />
-            </div>
+            </div>)}
             <span className={`ms-9 text-red-600 font-semibold ${errors.nombre ? "block" : "hidden"}`}>
                 El nombre debe contener mínimo 2 caracteres
             </span>
 
-            <div className="flex justify-center items-center space-x-4">
+            {modo !== "modificar" &&(
+                <div className="flex justify-center items-center space-x-4">
                 {showPassword ? <FaEye onClick={() => setShowPassword(!showPassword)} /> 
                 : 
                 <FaEyeSlash onClick={() => setShowPassword(!showPassword)} />}  
@@ -143,6 +184,7 @@ export const RegisterForm = () => {
                     className="flex w-full px-4 py-2 border border-gray-400 rounded-lg shadow-sm focus:ring-indigo-300"
                 />
             </div>
+            )}
             <span className={`ms-9 text-red-600 font-semibold ${errors.nombre ? "block" : "hidden"}`}>
                 El nombre debe contener mínimo 2 caracteres
             </span>
@@ -162,11 +204,21 @@ export const RegisterForm = () => {
                 El nombre debe contener mínimo 2 caracteres
             </span>
 
-            <div className="flex justify-center w-full">
+            <div className="flex justify-center w-full gap-x-2">
+                
+                { (modo == "crear" || modo == "modificar") && (
+                    <button type="submit"
+                        className="px-4 py-2 rounded-lg font-semibold text-slate-200 bg-red-600 hover:bg-red-800 transform hover:scale-110 ease-in-out"
+                        onClick={() =>setIsOpenUserModal(false)}
+                        >
+                    Cancelar
+                </button>
+                ) } 
+
                 <button type="submit"
                 className="px-4 py-2 rounded-lg font-semibold text-slate-200 bg-blue-600 hover:bg-blue-900 transform hover:scale-110 ease-in-out"
                 >
-                    Registrarme
+                    {modo === "modificar" ? "Modificar" : "Registrarme"}
                 </button>
             </div>
         

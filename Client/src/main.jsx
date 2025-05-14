@@ -3,11 +3,15 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { App } from './App'
 import { SnackbarProvider } from "notistack"
+import { Provider } from 'react-redux'
+import { store } from "./store/store"
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <SnackbarProvider maxSnack={4} autoHideDuration={2000}>
-        <App />
-    </SnackbarProvider>
-  </StrictMode>,
+<Provider store= {store}>
+    <StrictMode>
+        <SnackbarProvider maxSnack={4} autoHideDuration={2000}>
+            <App />
+        </SnackbarProvider>
+    </StrictMode>
+</Provider>
 )
