@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { useSelector } from "react-redux"
-import PulseLoader from "react-spinners/PulseLoader";
+
 
 export const UserDetails = () => {
     const { usuario } = useSelector((state) => state.auth)
@@ -9,7 +8,6 @@ export const UserDetails = () => {
 
     return (
         <>
-            { !usuario && <PulseLoader color="#156b4d" size={10} />}
             { usuario && (
                 <div className="flex justify-center mt-5">
                 <div className="max-w-md w-full bg-white shadow-md rounded-lg border p-6">

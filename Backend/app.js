@@ -14,7 +14,7 @@ const main = async () => {
         await sequelize.authenticate();
         logger.info("Conexión a la base de datos establecida correctamente.");
         console.log("Conexión a la base de datos establecida correctamente.");
-        await sequelize.sync({ force: false, alter: false });
+        await sequelize.sync({ force: false, alter: true });
         logger.info("Modelos sincronizados correctamente.");
 
         const server = app.listen(PORT, () => {

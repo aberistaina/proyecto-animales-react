@@ -31,9 +31,11 @@ export const Usuario = sequelize.define('Usuario', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+        deletedAt: 'destroyTime'
     },
     
 }, {
     tableName: 'usuarios',
+    paranoid: true,
     timestamps: true,
 });

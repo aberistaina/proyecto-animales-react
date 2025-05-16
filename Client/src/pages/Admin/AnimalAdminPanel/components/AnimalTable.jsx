@@ -51,7 +51,7 @@ export const AnimalTable = ({ animales, setIsOpen, isOpen, razas, especies }) =>
             const requestOptions = {
                 method: "delete",
             }
-            console.log(requestOptions);
+            
             const url = `http://localhost:3000/api/v1/animales/eliminar-animal/${animalID}`
             const response = await fetch(url, requestOptions)
             const data = await response.json()

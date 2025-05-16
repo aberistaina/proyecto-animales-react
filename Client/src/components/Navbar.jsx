@@ -3,16 +3,21 @@ import { IoIosHome } from "react-icons/io";
 import { GoPersonFill } from "react-icons/go";
 import { FaDog } from "react-icons/fa6";
 import { RiAdminFill } from "react-icons/ri";
-
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export const Navbar = () => {
-    const token = localStorage.getItem("token")
+    const { usuario } = useSelector((state) => state.auth);
+    const token = localStorage.getItem("token");
 
-    const logout = () =>{
-        localStorage.removeItem("token")
-        localStorage.removeItem("usuario")
-        location.href = "/"
-    }
+
+
+
+    const logout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        location.href = "/";
+    };
     return (
         <nav className="bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,44 +38,56 @@ export const Navbar = () => {
                         </h4>
 
                         <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
-                            <NavLink to={"/admin/animales"} className="flex items-center">
+                            <NavLink
+                                to={"/admin/animales"}
+                                className="flex items-center"
+                            >
                                 <FaDog className="mr-2" /> Panel Animales
                             </NavLink>
                         </h4>
 
                         <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
-                            <NavLink to={"/admin/users"} className="flex items-center">
+                            <NavLink
+                                to={"/admin/users"}
+                                className="flex items-center"
+                            >
                                 <RiAdminFill className="mr-2" /> Panel Usuarios
                             </NavLink>
                         </h4>
 
-                        {
-                            token && <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
-                            <NavLink className="flex items-center">
-                                <GoPersonFill className="mr-2" /> Mi Cuenta
-                            </NavLink>
-                        </h4>
-                        }
+                        {token && (
+                            <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
+                                <NavLink
+                                    to={`/mi-cuenta/${usuario?.id}`}
+                                    className="flex items-center"
+                                >
+                                    <GoPersonFill className="mr-2" /> Mi Cuenta
+                                </NavLink>
+                            </h4>
+                        )}
 
-                        {
-                            !token && <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
-                            <NavLink to={"/login"} className="flex items-center">
-                                <GoPersonFill className="mr-2" /> Login
-                            </NavLink>
-                        </h4>
-                        }
+                        {!token && (
+                            <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
+                                <NavLink
+                                    to={"/login"}
+                                    className="flex items-center"
+                                >
+                                    <GoPersonFill className="mr-2" /> Login
+                                </NavLink>
+                            </h4>
+                        )}
 
-                        {
-                            token && <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
-                            <NavLink to={"/"} className="flex items-center" onClick={logout}>
-                                <GoPersonFill className="mr-2" /> Logout
-                            </NavLink>
-                        </h4>
-                        }
-
-                        
-
-
+                        {token && (
+                            <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
+                                <NavLink
+                                    to={"/"}
+                                    className="flex items-center"
+                                    onClick={logout}
+                                >
+                                    <GoPersonFill className="mr-2" /> Logout
+                                </NavLink>
+                            </h4>
+                        )}
                     </div>
                 </div>
             </div>
