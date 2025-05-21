@@ -8,20 +8,33 @@ export const crearSolicitudAdopcion = async(req, res) =>{
     try {
 
         const { id_usuario, id_animal } = req.body
+        
+        const adopcionExistente = await Adopcion.findOne({
+            where:{
+                id_animz: id_animal,
+                id_usuario
+            }
+        })
 
-        const id = 1
+        if(adopcionExistente){
+            return res.status(400).json({
+            code:400,
+            message: "Ya hay una solicitud tuya pendiente para adoptar a este animal",
+        })}
 
         await Adopcion.create({
-            id_usuario: id,
+            id_usuario,
             id_animal,
             estado: "pendiente",
         })
+
 
         res.status(201).json({
             code:201,
             message: "Solicitud Creada Con Éxito",
         })
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             code:500,
             message: "Hubo un error interno en el servidor",

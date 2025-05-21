@@ -9,18 +9,19 @@ export const DetalleAnimal = () => {
     const [animal, setAnimal ] = useState("")
     const { enqueueSnackbar } = useSnackbar();
     const { usuario } = useSelector((state) => state.auth)
-
     const handleClick = async() =>{
         try {
 
             const formData = new FormData()
             formData.append("id_animal", id)
+            formData.append("id_usuario", usuario?.id)
 
             const requestOptions = {
                 method: "POST",
                 body: formData
             }
 
+            
             const url = `http://localhost:3000/api/v1/adopciones/solicitar-adopcion`
             const response = await fetch(url, requestOptions)
             const data = await response.json()
@@ -28,6 +29,8 @@ export const DetalleAnimal = () => {
             if (data.code === 201) {
                 enqueueSnackbar(data.message, { variant: "success" });
                 localStorage.setItem("token", data.token);
+            }else if(data.code === 400){
+                enqueueSnackbar(data.message, { variant: "warning" });
             } else {
                 enqueueSnackbar(data.message, { variant: "error" });
             }

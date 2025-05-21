@@ -15,7 +15,8 @@ const authSlice = createSlice({
             const token = action.payload
             state.token = token
             state.isAuthenticated = true
-            state.usuario = jwtDecode(token)
+            const decoded = jwtDecode(token)
+            state.usuario = decoded.data
             localStorage.setItem("token", token)
         },
         logout: (state) =>{

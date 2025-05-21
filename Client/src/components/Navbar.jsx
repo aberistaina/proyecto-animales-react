@@ -3,21 +3,13 @@ import { IoIosHome } from "react-icons/io";
 import { GoPersonFill } from "react-icons/go";
 import { FaDog } from "react-icons/fa6";
 import { RiAdminFill } from "react-icons/ri";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
 
 export const Navbar = () => {
-    const { usuario } = useSelector((state) => state.auth);
-    const token = localStorage.getItem("token");
-
-
-
-
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        location.href = "/";
-    };
+    const { usuario, isAuthenticated } = useSelector((state) => state.auth);
+    const dispatch = useDispatch()
+    
     return (
         <nav className="bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,25 +29,25 @@ export const Navbar = () => {
                             </NavLink>
                         </h4>
 
-                        <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
+                        {isAuthenticated && usuario.admin && (<h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
                             <NavLink
                                 to={"/admin/animales"}
                                 className="flex items-center"
                             >
                                 <FaDog className="mr-2" /> Panel Animales
                             </NavLink>
-                        </h4>
+                        </h4>)}
 
-                        <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
+                        {isAuthenticated && usuario.admin &&(<h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
                             <NavLink
                                 to={"/admin/users"}
                                 className="flex items-center"
                             >
                                 <RiAdminFill className="mr-2" /> Panel Usuarios
                             </NavLink>
-                        </h4>
+                        </h4>)}
 
-                        {token && (
+                        {isAuthenticated && (
                             <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
                                 <NavLink
                                     to={`/mi-cuenta/${usuario?.id}`}
@@ -66,7 +58,7 @@ export const Navbar = () => {
                             </h4>
                         )}
 
-                        {!token && (
+                        {!isAuthenticated && (
                             <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
                                 <NavLink
                                     to={"/login"}
@@ -77,12 +69,12 @@ export const Navbar = () => {
                             </h4>
                         )}
 
-                        {token && (
+                        {isAuthenticated && (
                             <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
                                 <NavLink
                                     to={"/"}
                                     className="flex items-center"
-                                    onClick={logout}
+                                    onClick={() => dispatch(logout())}
                                 >
                                     <GoPersonFill className="mr-2" /> Logout
                                 </NavLink>

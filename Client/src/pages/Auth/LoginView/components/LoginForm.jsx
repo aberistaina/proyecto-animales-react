@@ -3,9 +3,11 @@ import { useSnackbar } from "notistack";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../../../store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
     const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const [loginForm, setLoginForm] = useState({
         email: "",
@@ -36,6 +38,7 @@ export const LoginForm = () => {
             if (data.code === 200) {
                 enqueueSnackbar(data.message, { variant: "success" });
                 dispatch(login(data.token))
+                navigate("/")
             } else {
                 enqueueSnackbar(data.message, { variant: "error" });
             }
