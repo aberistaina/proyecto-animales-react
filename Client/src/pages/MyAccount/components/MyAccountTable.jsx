@@ -3,11 +3,11 @@ export const MyAccountTable = ({ solicitudes }) => {
     
     return (
         <>
-            {solicitudes.length === 0 && 
+            {solicitudes && solicitudes.length === 0 && 
             <div className="text-center">
                 <h1>Usted No Tiene Solicitudes Realizadas</h1>
             </div>}
-            {solicitudes.length  > 0 && <div className="flex justify-center mt-5">
+            {solicitudes && <div className="flex justify-center mt-5">
                 <table className="w-[80%] divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
                     <thead className="bg-gray-100">
                         <tr>

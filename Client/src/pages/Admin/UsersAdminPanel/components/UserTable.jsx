@@ -3,17 +3,23 @@ import { CreateUserButton } from "./CreateUserButton";
 import { useSnackbar } from "notistack";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 export const UserTable = ({ users, setUsers, setIsOpenUserModal, setModo, handleUpdate }) => {
 
     const { enqueueSnackbar } = useSnackbar();
+    const { token } = useSelector((state) => state.auth);
 
 
     const handleDelete = async(id) => {
         try {
 
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
             const requestOptions = {
-                method: "DELETE"
+                method: "DELETE",
+                headers: myHeaders
             }
             const response = await fetch(`http://localhost:3000/api/v1/admin/delete-user/${id}`, requestOptions)
             const data = await response.json()
@@ -41,9 +47,13 @@ export const UserTable = ({ users, setUsers, setIsOpenUserModal, setModo, handle
         formData.append("id", userID);
         formData.append("estado", nuevoRol);
 
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", `Bearer ${token}`);
+
         const requestOptions = {
             method: "PUT",
-            body: formData
+            body: formData,
+            headers: myHeaders
         }
         const url = "http://localhost:3000/api/v1/admin/cambiar-estado"
         const response = await fetch(url, requestOptions)

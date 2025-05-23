@@ -42,6 +42,7 @@ export const issueTokenMiddleware = async(req, res, next) =>{
 export const verifyTokenMiddleware = async(req, res, next) =>{
 
     try {
+        
         let {authorization} = req.headers
         let tokenFromQuery = req.query.token
         let token = null

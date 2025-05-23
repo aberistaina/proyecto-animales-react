@@ -6,10 +6,11 @@ import { FaEyeSlash } from "react-icons/fa";
 import { MdOutlinePhoneIphone } from "react-icons/md";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom"  
+import { useSelector } from "react-redux";
 
 export const RegisterForm = ({ setIsOpenUserModal , modo, usuarioSeleccionado}) => {
 
-
+     const { token } = useSelector((state) => state.auth);
     const navigate = useNavigate()
     const [ showPassword, setShowPassword ] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
@@ -47,13 +48,16 @@ export const RegisterForm = ({ setIsOpenUserModal , modo, usuarioSeleccionado}) 
             formData.append("password", registerForm.password)
             formData.append("telefono", registerForm.telefono)
 
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `Bearer ${token}`);
 
             const url = "http://localhost:3000"
             const path = modo == "modificar" ? "api/v1/admin/update-user" : "api/v1/auth" 
 
             const requestOptions = {
                 method: modo == "modificar" ? "PUT" : "POST",
-                body: formData
+                body: formData,
+                headers: myHeaders
             }
 
             const response = await fetch(`${url}/${path}`, requestOptions)
@@ -67,7 +71,7 @@ export const RegisterForm = ({ setIsOpenUserModal , modo, usuarioSeleccionado}) 
                 setIsOpenUserModal(false)
             }
             else{
-                enqueueSnackbar(data.message, { variant: "error"})
+                enqueueSnackbar("Hubo un error, intente nuevamente más tarde", { variant: "error"})
             }
         } catch (error) {
             console.log(error);
@@ -78,10 +82,22 @@ export const RegisterForm = ({ setIsOpenUserModal , modo, usuarioSeleccionado}) 
     useEffect(() => {
         const getUserData = async() =>{
             try {
+                const myHeaders = new Headers();
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const requestOptions = {
+                method: "GET",
+                headers: myHeaders,
+                };
+
                 const url = `http://localhost:3000/api/v1/admin/get-user/${usuarioSeleccionado}`
-                const response = await fetch(url)
+                const response = await fetch(url, requestOptions)
                 const data = await response.json()
+                console.log(data);
                 const usuario = data.data
+
+                
+                
 
                 setRegisterForm({
                     nombre: usuario.nombre,

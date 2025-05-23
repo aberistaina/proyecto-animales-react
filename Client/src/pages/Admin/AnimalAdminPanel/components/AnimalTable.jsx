@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import { CreateButton } from "./CreateButton";
 import { ModalCrear } from "./ModalCrear"
+import { useSelector } from "react-redux";
 
 export const AnimalTable = ({ animales, setIsOpen, isOpen, razas, especies }) => {
     const [animalList, setAnimalList] = useState([]);
     const [ animalSeleccionado, setAnimalSeleccionado ] = useState("")
     const [ modo, setModo ] = useState("")
     const { enqueueSnackbar } = useSnackbar();
+    const { token } = useSelector((state) => state.auth);
 
     useEffect(() => {
         setAnimalList(animales);
@@ -28,9 +30,13 @@ export const AnimalTable = ({ animales, setIsOpen, isOpen, razas, especies }) =>
         formData.append("id", animalID);
         formData.append("rol", nuevoEstado);
 
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", `Bearer ${token}`);
+
         const requestOptions = {
             method: "PUT",
-            body: formData
+            body: formData,
+            headers: myHeaders
         }
         const url = "http://localhost:3000/api/v1/animales/cambiar-estado"
         const response = await fetch(url, requestOptions)
@@ -48,8 +54,11 @@ export const AnimalTable = ({ animales, setIsOpen, isOpen, razas, especies }) =>
             const formData = new FormData()
             formData.append("id", animalID);
 
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `Bearer ${token}`);
             const requestOptions = {
                 method: "delete",
+                headers: myHeaders
             }
             
             const url = `http://localhost:3000/api/v1/animales/eliminar-animal/${animalID}`

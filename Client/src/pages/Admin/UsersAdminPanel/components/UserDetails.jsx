@@ -5,7 +5,6 @@ export const UserDetails = () => {
     const { usuario } = useSelector((state) => state.auth)
 
     
-
     return (
         <>
             { usuario && (

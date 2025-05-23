@@ -40,4 +40,6 @@ export const Animal = sequelize.define('Animal', {
 }, {
     tableName: 'animales',
     timestamps: true,
+    paranoid: true,
+    deleteAt: 'deletedAt',
 });

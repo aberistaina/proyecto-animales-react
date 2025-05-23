@@ -182,6 +182,7 @@ export const deleteAnimal = async(req, res) =>{
             message: "Animal eliminado con éxito",
         })
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             code:500,
             message: "Hubo un error interno en el servidor",

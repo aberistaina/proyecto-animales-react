@@ -11,7 +11,7 @@ export const crearSolicitudAdopcion = async(req, res) =>{
         
         const adopcionExistente = await Adopcion.findOne({
             where:{
-                id_animz: id_animal,
+                id_animal: id_animal,
                 id_usuario
             }
         })

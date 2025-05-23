@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import PacmanLoader from "react-spinners/PulseLoader";
+import { useSelector } from "react-redux";
 
 export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionado }) => {
 
     const [isLoading, setIsLoading ] = useState(false)
+    const { token } = useSelector((state) => state.auth);
 
     const [form, setForm] = useState({
         nombre: "",
@@ -31,9 +33,13 @@ export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionad
             formData.append("especie", form.especie)
             formData.append("raza", form.raza)
 
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
             const requestOptions = {
                 method: modo === "crear" ? "POST" : "PUT",
-                body: formData
+                body: formData,
+                headers: myHeaders
             }
             const url = "http://localhost:3000/api/v1/animales"
             const path = modo === "crear" ? "/crear-animal" : `/editar-animal/${animalSeleccionado}`
