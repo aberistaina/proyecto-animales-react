@@ -13,6 +13,7 @@ export const ChangePasswordForm = () => {
         password: "",
         repeatPassword: "",
     });
+
     const email = params.get("email");
     const token = params.get("token");
 
@@ -38,21 +39,18 @@ export const ChangePasswordForm = () => {
                 return;
             }
 
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-            myHeaders.append("Authorization", `bearer ${token}`);
+            const formData = new FormData()
+            formData.append("email", email)
+            formData.append("token", token)
+            formData.append("password", passwords.password)
 
-            const raw = JSON.stringify({
-                "password": passwords.password
-            });
 
             const requestOptions = {
                 method: "POST",
-                headers: myHeaders,
-                body: raw
+                body: formData
             };
 
-            const url = `http://localhost:3000/api/v1/auth/change-password/${email}`;
+            const url = `http://localhost:3000/api/v1/auth/change-forgot-password`;
             const response = await fetch(url, requestOptions);
             const data = await response.json();
 

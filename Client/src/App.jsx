@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { MyAcountPage } from "./pages/MyAccount/MyAcountPage";
 import { ProtectedRoutes } from "./components/ProtectedRoutes";
 import { UnauthorizedPage } from "./pages/Unauthorized/UnauthorizedPage";
+import { SolicitudesPage } from "./pages/Admin/Solicitudes/SolicitudesPage";
 
 export const App = () => {
     const dispatch = useDispatch()
@@ -44,6 +45,7 @@ export const App = () => {
                 <Route element={ <ProtectedRoutes admin={true} />}>
                     <Route path="/admin/users" element={<UserAdminPanelPage />} />
                     <Route path="/admin/animales" element={<AnimalAdminPanelPage />} />
+                    <Route path="/admin/solicitudes" element={<SolicitudesPage />} />
                 </Route>
 
                 <Route path="/unauthorized" element={<UnauthorizedPage />} />

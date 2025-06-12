@@ -66,7 +66,7 @@ export const DetalleAnimal = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Imagen */}
                 <img
-                    src={animal.imagen}
+                    src={`http://localhost:3000/${animal.imagen}`}
                     alt={`Foto de ${animal.nombre}`}
                     className="w-full h-96 object-cover"
                 />

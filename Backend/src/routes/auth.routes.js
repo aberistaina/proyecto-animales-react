@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { changePassword, createUser, forgotPassword, login } from "../controllers/auth.controller.js";
+import { changeForgotPassword, changePassword, createUser, forgotPassword, login, loginGoogle } from "../controllers/auth.controller.js";
 import { issueTokenMiddleware, verifyTokenMiddleware } from "../middlewares/login.middleware.js";
 
 
@@ -9,6 +9,8 @@ router.post("/", createUser)
 router.post("/login", issueTokenMiddleware , login)
 router.post("/recovery-password/:email", forgotPassword)
 router.post("/change-password/:email", verifyTokenMiddleware, changePassword)
+router.post("/change-forgot-password/", changeForgotPassword)
+router.post("/google", loginGoogle )
 
 
 

@@ -7,6 +7,7 @@ export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionad
 
     const [isLoading, setIsLoading ] = useState(false)
     const { token } = useSelector((state) => state.auth);
+    const [ files, setFiles] = useState()
 
     const [form, setForm] = useState({
         nombre: "",
@@ -23,6 +24,13 @@ export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionad
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
+    const handleChangeFiles = (e) => {
+        const selectedFile = e.target.files[0]
+        if(selectedFile){
+            setFiles([selectedFile])
+        }
+    };
+
     const handleSubmit = async (e) => {
         try {
             setIsLoading(true)
@@ -32,6 +40,8 @@ export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionad
             formData.append("descripcion", form.descripcion)
             formData.append("especie", form.especie)
             formData.append("raza", form.raza)
+            formData.append("imagen", files[0])
+            console.log(formData);
 
             const myHeaders = new Headers();
             myHeaders.append("Authorization", `Bearer ${token}`);
@@ -148,6 +158,12 @@ export const ModalCrear = ({ setIsOpen, razas, especies, modo, animalSeleccionad
                                 ))}
                             </select>
                         </div>
+                        <input
+                            name="imagen"
+                            onChange={handleChangeFiles}
+                            type="file"
+                            className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                        />
                     </div>
                     <div className="flex justify-end mt-5 gap-2">
                         <button

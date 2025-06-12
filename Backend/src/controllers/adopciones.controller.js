@@ -73,7 +73,7 @@ export const solicitudesById = async(req, res) =>{
                 }
             ]
         })
-        console.log(animalesSolicitados);
+
 
         const solicitudesMap = animalesSolicitados.map((solicitud) =>{
             const data = solicitud.toJSON()
@@ -103,5 +103,58 @@ export const solicitudesById = async(req, res) =>{
             message: "Hubo un error interno en el servidor",
             
         }) 
+    }
+}
+
+export const getAllSolicitudes = async(req, res) =>{
+    try {
+        
+        const solicitudes = await Adopcion.findAll({
+            include:[
+                {
+                    model:Animal,
+                    as: "animal",
+                    include:[
+                        {
+                            model:Raza,
+                            as: "raza",
+                        },
+                        {
+                            model:Especie,
+                            as: "especie",
+                        }
+                    ]
+                },
+                {
+                    model:Usuario,
+                    as: "usuario"
+                }
+            ]
+        })
+        const solicitudesMap = solicitudes.map(solicitud =>({
+            id: solicitud.id,
+            fecha_solicitud: solicitud.fecha_solicitud,
+            estado: solicitud.estado,
+            nombre_usuario: solicitud.usuario?.nombre,
+            apellido: solicitud.usuario?.apellido,
+            nombre_animal: solicitud.animal?.nombre,
+            especie_animal: solicitud.animal?.especie?.nombre,
+
+        }))
+
+        res.status(200).json({
+            code:200,
+            message: "Solicitudes obtenidas con éxito",
+            data: solicitudesMap
+            
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            code:500,
+            message: "Hubo un error interno en el servidor",
+            
+        })
+        
     }
 }

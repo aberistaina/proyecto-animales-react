@@ -26,7 +26,7 @@ export const CardAnimal = () => {
                     key={animal.id}
                     >
                         <img
-                            src={animal.imagen}
+                            src={`http://localhost:3000/${animal.imagen}`}
                             alt={`Foto de ${animal.nombre}`}
                             className="w-full h-80 object-cover"
                         />

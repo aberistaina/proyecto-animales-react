@@ -22,7 +22,7 @@ app.use(cors());
 
 
 //Carpeta Publica
-app.use("/public", express.static(__dirname + "/public"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //Endpoints
 app.use("/api/v1/auth", authRoutes)

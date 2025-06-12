@@ -1,7 +1,11 @@
 import { Animal } from "../models/Animal.model.js"
 import { Raza } from "../models/Raza.model.js"
 import { Especie } from "../models/Especie.model.js"
+import * as path from "path"
+import { fileURLToPath } from "url"
+import { sequelize } from "../database/database.js"
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export const getAllAnimals = async(req, res) =>{
     try {
@@ -66,23 +70,46 @@ export const getAnimalById = async(req, res) =>{
 }
 
 export const createAnimal = async(req, res )=>{
+
+    const transaction = await sequelize.transaction();
     try {
+        
         const { nombre, edad, descripcion, especie, raza } = req.body
+        const { imagen } = req.files
+
+        const extension = imagen.name.split(".").pop()
+    
         const nuevoAnimal = await Animal.create({
             nombre,
             edad,
             descripcion,
             estado: "disponible",
             id_especie: especie,
-            id_raza: raza
+            id_raza: raza,
+            
+        }, {transaction})
+
+        const rutaRelativa = path.join("uploads", `${nuevoAnimal.id}-${nombre}.${extension}` )
+        const rutaAbsoluta = path.join(__dirname,  "../", rutaRelativa  )
+
+        await nuevoAnimal.update({
+            imagen: rutaRelativa
+        }, {transaction})
+        
+
+        imagen.mv(rutaAbsoluta, (error) =>{
+            if(error) return res.status(500).json({error})
         })
 
+        await transaction.commit();
         res.status(201).json({
             code:201,
             message: "Animal creado con éxito",
             data: nuevoAnimal
         })
     } catch (error) {
+        console.log(error);
+        await transaction.rollback();
         res.status(500).json({
             code:500,
             message: "Hubo un error interno en el servidor",

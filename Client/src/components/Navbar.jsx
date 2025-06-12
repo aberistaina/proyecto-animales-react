@@ -5,11 +5,12 @@ import { FaDog } from "react-icons/fa6";
 import { RiAdminFill } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
+import { FaPaw } from "react-icons/fa";
 
 export const Navbar = () => {
     const { usuario, isAuthenticated } = useSelector((state) => state.auth);
-    const dispatch = useDispatch()
-    
+    const dispatch = useDispatch();
+
     return (
         <nav className="bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,23 +30,39 @@ export const Navbar = () => {
                             </NavLink>
                         </h4>
 
-                        {isAuthenticated && usuario.admin && (<h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
-                            <NavLink
-                                to={"/admin/animales"}
-                                className="flex items-center"
-                            >
-                                <FaDog className="mr-2" /> Panel Animales
-                            </NavLink>
-                        </h4>)}
+                        {isAuthenticated && usuario.admin && (
+                            <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
+                                <NavLink
+                                    to={"/admin/animales"}
+                                    className="flex items-center"
+                                >
+                                    <FaDog className="mr-2" /> Panel Animales
+                                </NavLink>
+                            </h4>
+                        )}
 
-                        {isAuthenticated && usuario.admin &&(<h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
-                            <NavLink
-                                to={"/admin/users"}
-                                className="flex items-center"
-                            >
-                                <RiAdminFill className="mr-2" /> Panel Usuarios
-                            </NavLink>
-                        </h4>)}
+                        {isAuthenticated && usuario.admin && (
+                            <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
+                                <NavLink
+                                    to={"/admin/users"}
+                                    className="flex items-center"
+                                >
+                                    <RiAdminFill className="mr-2" /> Panel
+                                    Usuarios
+                                </NavLink>
+                            </h4>
+                        )}
+                        {isAuthenticated && usuario.admin && (
+                            <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
+                                <NavLink
+                                    to={"/admin/solicitudes"}
+                                    className="flex items-center"
+                                >
+                                    <FaPaw className="mr-2" />
+                                    Solicitudes
+                                </NavLink>
+                            </h4>
+                        )}
 
                         {isAuthenticated && (
                             <h4 className="cursor-pointer flex items-center font-bold text-lg text-black transition-all duration-300 hover:text-slate-500 hover:translate-x-1">
